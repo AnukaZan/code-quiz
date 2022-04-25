@@ -1,64 +1,72 @@
+//questions and answer arrays
 var questionArray = [
     {
-        question: "How are you?",
-        choices: ["Good", "Meh", "Awful no good terrible"],
+        q: "How are you?",
+        c: ["Good", "Meh", "Awful no good terrible"],
         answer: "Good"
     },
 
     {
-        question: "Why are you?",
-        choices: ["Idk", "Because", "Therefore I am"],
+        q: "Why are you?",
+        c: ["Idk", "Because", "Therefore I am"],
         answer: "Idk"
     },
 
     {
-        question: "Where are you?",
-        choices: ["Here", "There", "Everywhere"],
+        q: "Where are you?",
+        c: ["Here", "There", "Everywhere"],
         answer: "Everywhere"
     }
 ]; 
 
+//id counter
 var questionIdCounter = 0;
+var questionEl = document.querySelector("#question-id"); //question title element
+var choicesEl = document.querySelector("#choices-id"); //choice element
 
-
+//Question and choice will appear one by one after choosing an option
 var appearQuestion = function(){
-    var questionTitle = document.querySelector("#question-id");
-    questionTitle.textContent = questionArray[questionIdCounter].question;
+    //question text will be according to index
+    questionEl.textContent = questionArray[questionIdCounter].q;
 
-    var questionChoices = document.querySelector("#choices-id");
+    //choices will be according to index number
+    //var choices = choicesEl.textContent;
+    var choices = questionArray[questionIdCounter].c;
 
-    for (var i = 0; i < questionArray[questionIdCounter].choices.length; i++){
-        var choiceBtn = document.createElement("li");
-        choiceBtn.textContent = questionArray[questionIdCounter].choices[i];
-        choiceBtn.addEventListener("click", userChoice);
-        questionChoices.append(choiceBtn);
+    //create element for each choice and do action once a choice is clicked
+    for (var i = 0; i < choices.length; i++){
+        var choiceBtn = document.createElement("ol"); //make unordered list for every choice
+        choiceBtn.textContent = choices[i]; //go through every choice
+
+        choicesEl.append(choiceBtn); //add choices in element
+        choiceBtn.addEventListener("click", userChoice); //add event listener to choice click
     }
-
-    console.log(questionTitle);
 
 }
 
-var userChoice = function(event) { // this variable gonna do something w/event
-    var userEl = event.target.textContent;
+//when a choice is clicked
+var userChoice = function(event) { 
+    var userEl = event.target.textContent; //save the text of whatever you clicked on
     console.log(userEl);
-    var answerText = document.querySelector("#answer-id");
+    var answerText = document.querySelector("#answer-id"); //save the answer section in this variable
 
-    if (userEl === questionArray[questionIdCounter].answer){
-        answerText.textContent = "Correct!";
+    if (userEl === questionArray[questionIdCounter].answer){ //if what you chose is my correct answer
+        answerText.textContent = "Correct!"; //then you are correct
         //add to score
     }
 
-    else {
+    else { 
         answerText.textContent = "Wrong!";
         //minus time from timer
     }
 
-    if (questionIdCounter < questionArray.length-1){
-        questionIdCounter++;
+    if (questionIdCounter < questionArray.length-1){ //if we haven't finished going through all questions
+        questionIdCounter++; //add to id counter
+        choicesEl.textContent = ""; //clear choices for next batch
         appearQuestion();
     }
 
-    else {
+    else { //otherwise game has ended
         //high score function
     }
 }
