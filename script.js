@@ -1,3 +1,23 @@
+//id counter
+var questionIdCounter = 0;
+var questionEl = document.querySelector("#question-id"); //question title element
+var choicesEl = document.querySelector("#choices-id"); //choice element
+var answerText = document.querySelector("#answer-id"); //save the answer section in this variable
+var quizStart = document.querySelector("#quiz-start");
+
+var timerEl = document.querySelector("#timer");
+var timerText = document.createElement("p");
+var timeLeft = 60;
+var score =0;
+
+var setTime = function(){
+    timeLeft = timeLeft-1;
+    if (timeLeft === 0){
+        clearInterval(setTime);
+        quizEnding();
+    }
+};
+
 //questions and answer arrays
 var questionArray = [
     {
@@ -19,13 +39,18 @@ var questionArray = [
     }
 ]; 
 
-//id counter
-var questionIdCounter = 0;
-var questionEl = document.querySelector("#question-id"); //question title element
-var choicesEl = document.querySelector("#choices-id"); //choice element
+//begin timer and then show text
+var begin = function(){
+    timeLeft = 60;
+    setInterval(setTime, 1000);
+    timerText.textContent = "Timer: "+ timeLeft;
+    timerEl.append(timerText);
+    appearQuestion();
+}
 
 //Question and choice will appear one by one after choosing an option
-var appearQuestion = function(){
+var appearQuestion = function(event){
+    quizStart.textContent="";
     //question text will be according to index
     questionEl.textContent = questionArray[questionIdCounter].q;
 
@@ -44,15 +69,16 @@ var appearQuestion = function(){
 
 }
 
+
+
 //when a choice is clicked
 var userChoice = function(event) { 
     var userEl = event.target.textContent; //save the text of whatever you clicked on
     console.log(userEl);
-    var answerText = document.querySelector("#answer-id"); //save the answer section in this variable
 
     if (userEl === questionArray[questionIdCounter].answer){ //if what you chose is my correct answer
         answerText.textContent = "Correct!"; //then you are correct
-        //add to score
+        score++;
     }
 
     else { 
@@ -67,11 +93,40 @@ var userChoice = function(event) {
     }
 
     else { //otherwise game has ended
-        //high score function
+        quizEnding();
     }
 }
 
-appearQuestion();
+//when user first opens quiz
+var quizOpening = function(){
+    quizStart.textContent = "Would You Like To Start My Pointless Quiz?";
 
-//within each object is a questions, choices, answers
-//
+    var startBtn = document.createElement("button");
+    startBtn.textContent = "Sure why not";
+    quizStart.appendChild(startBtn);
+
+    startBtn.addEventListener("click", begin);
+   
+}
+
+//when timer is over or choices are complete
+var quizEnding = function(){
+    questionEl.textContent = "";
+    choicesEl.textContent = "";
+    answerText.textContent = "";
+    var scoreText = document.createElement("p");
+    scoreText.textContent = "Your Score: " + score;
+    quizStart.appendChild(scoreText);
+
+    var initialEl = document.createElement("input");
+    initialEl.setAttribute("type", "text");
+
+    var startBtn = document.createElement("button");
+    startBtn.textContent = "Try Again";
+    quizStart.appendChild(startBtn);
+    questionIdCounter = 0;
+    score= 0;
+    startBtn.addEventListener("click", begin);
+};
+quizOpening();
+

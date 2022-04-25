@@ -5,3 +5,19 @@
 ol{
     margin-left:0;
 }
+
+.choices ol{
+    border: 1px solid black;
+    padding: 10px;
+}
+
+ol:hover{
+    background-color:pink;
+}
+
+h2{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    color: pink;
+}
+
+
