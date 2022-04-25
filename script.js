@@ -5,18 +5,11 @@ var choicesEl = document.querySelector("#choices-id"); //choice element
 var answerText = document.querySelector("#answer-id"); //save the answer section in this variable
 var quizStart = document.querySelector("#quiz-start");
 
+var scoreArray = [];
+
 var timerEl = document.querySelector("#timer");
-var timerText = document.createElement("p");
 var timeLeft = 60;
 var score =0;
-
-var setTime = function(){
-    timeLeft = timeLeft-1;
-    if (timeLeft === 0){
-        clearInterval(setTime);
-        quizEnding();
-    }
-};
 
 //questions and answer arrays
 var questionArray = [
@@ -28,23 +21,36 @@ var questionArray = [
 
     {
         q: "Why are you?",
-        c: ["Idk", "Because", "Therefore I am"],
-        answer: "Idk"
+        c: ["Why am I what?", "Just because", "Therefore I am"],
+        answer: "Therefore I am"
     },
 
     {
         q: "Where are you?",
         c: ["Here", "There", "Everywhere"],
         answer: "Everywhere"
+    },
+
+    {
+        q: "What was the point of these questions?",
+        c: ["No point", "Made up examples on the spot", "Homework"],
+        answer: "Homework"
     }
 ]; 
 
-//begin timer and then show text
+//subtract one from timeLeft 
+var setTime = function(){
+    timeLeft = timeLeft-1;
+    if (timeLeft === 0){
+        clearInterval(setTime);
+        quizEnding();
+    }
+};
+
+
+//restart timer and then show questions
 var begin = function(){
     timeLeft = 60;
-    setInterval(setTime, 1000);
-    timerText.textContent = "Timer: "+ timeLeft;
-    timerEl.append(timerText);
     appearQuestion();
 }
 
@@ -55,7 +61,6 @@ var appearQuestion = function(event){
     questionEl.textContent = questionArray[questionIdCounter].q;
 
     //choices will be according to index number
-    //var choices = choicesEl.textContent;
     var choices = questionArray[questionIdCounter].c;
 
     //create element for each choice and do action once a choice is clicked
@@ -74,7 +79,6 @@ var appearQuestion = function(event){
 //when a choice is clicked
 var userChoice = function(event) { 
     var userEl = event.target.textContent; //save the text of whatever you clicked on
-    console.log(userEl);
 
     if (userEl === questionArray[questionIdCounter].answer){ //if what you chose is my correct answer
         answerText.textContent = "Correct!"; //then you are correct
@@ -99,34 +103,67 @@ var userChoice = function(event) {
 
 //when user first opens quiz
 var quizOpening = function(){
-    quizStart.textContent = "Would You Like To Start My Pointless Quiz?";
+    quizStart.textContent = "Would You Like To Start My Quiz?";
 
     var startBtn = document.createElement("button");
     startBtn.textContent = "Sure why not";
     quizStart.appendChild(startBtn);
 
-    startBtn.addEventListener("click", begin);
-   
+    startBtn.addEventListener("click", function(){
+        var timeLeft = 60;
+
+        var quizTimer = setInterval(function function1(){
+            timerEl.innerHTML = timeLeft + " " + "seconds remaining";
+            timeLeft-=1;
+            if(timeLeft <=0){
+                clearInterval(quizTImer);
+                timerEl.innerHTML = "Time is up"
+            }
+        }, 1000);
+    });
+
 }
 
-//when timer is over or choices are complete
-var quizEnding = function(){
+
+
+var clearEverything = function(){
     questionEl.textContent = "";
     choicesEl.textContent = "";
     answerText.textContent = "";
-    var scoreText = document.createElement("p");
-    scoreText.textContent = "Your Score: " + score;
+};
+
+//when timer is over or choices are complete
+var quizEnding = function(){
+    clearEverything();
+    var scoreText = document.createElement("div");
+    scoreText.textContent = "Your Final Score is: " + score;
     quizStart.appendChild(scoreText);
 
     var initialEl = document.createElement("input");
     initialEl.setAttribute("type", "text");
+    quizStart.appendChild(initialEl);
+
+    //save score and initials here
 
     var startBtn = document.createElement("button");
-    startBtn.textContent = "Try Again";
+    startBtn.textContent = "Submit";
     quizStart.appendChild(startBtn);
     questionIdCounter = 0;
     score= 0;
     startBtn.addEventListener("click", begin);
+};
+
+var saveScore = function(initial, scores){
+    scoreArray.appendChild(initial, scores);
+    scoreArrayJson = JSON.stringify(scoreArray);
+    localStorage.setItem("scoreArray", scoreArrayJson);
+    //loadScore("scoreArray");
+};
+
+var loadScore = function (array){
+    var str = localStorage.getItem(array);
+    var parsedArr = JSON.parse(str);
+    console.log(parsedArr);
 };
 quizOpening();
 

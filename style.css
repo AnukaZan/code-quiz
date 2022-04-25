@@ -1,5 +1,6 @@
 *{
     margin: 50px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 
 ol{
@@ -15,9 +16,25 @@ ol:hover{
     background-color:pink;
 }
 
+p{
+    color:black;
+}
+
 h2{
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     color: pink;
 }
 
+button{
+    border: 1px solid black;
+    padding: 10px;
+    background-color:white;
+    color: black;
+    /*width: 100%;*/
+}
+
+button:hover{
+    background-color:pink;
+    color: white;
+}
 
