@@ -20,15 +20,27 @@ var questionArray = [
     },
 
     {
-        q: "Why are you?",
-        c: ["Why am I what?", "Just because", "Therefore I am"],
-        answer: "Therefore I am"
+        q: "Which is a real coding language?",
+        c: ["OrangutanX", "SnakeDB", "Python"],
+        answer: "Python"
     },
 
     {
-        q: "Where are you?",
-        c: ["Here", "There", "Everywhere"],
-        answer: "Everywhere"
+        q: "How do you create an element on JS?",
+        c: ["document.PleaseCreateMeAnElement", "document.GiveMeAnElementNOW", "document.createElement"],
+        answer: "document.createElement"
+    },
+
+    {
+        q: "How do you assign a font on CS?",
+        c: ["font-familia", "font-miFamilia", "font-family"],
+        answer: "font-family"
+    },
+
+    {
+        q: "How do you fetch an API?",
+        c: ["fetch(apiUrl)", "getMe(apiUrl)", "getMe(apiUrl).please"],
+        answer: "fetch(apiUrl)"
     },
 
     {
@@ -37,15 +49,6 @@ var questionArray = [
         answer: "Homework"
     }
 ]; 
-
-//subtract one from timeLeft 
-var setTime = function(){
-    timeLeft = timeLeft-1;
-    if (timeLeft === 0){
-        clearInterval(setTime);
-        quizEnding();
-    }
-};
 
 
 //restart timer and then show questions
@@ -79,6 +82,7 @@ var appearQuestion = function(event){
 //when a choice is clicked
 var userChoice = function(event) { 
     var userEl = event.target.textContent; //save the text of whatever you clicked on
+    questionIdCounter++; //add to id counter
 
     if (userEl === questionArray[questionIdCounter].answer){ //if what you chose is my correct answer
         answerText.textContent = "Correct!"; //then you are correct
@@ -87,39 +91,44 @@ var userChoice = function(event) {
 
     else { 
         answerText.textContent = "Wrong!";
-        //minus time from timer
+        timeLeft = timeLeft-10;
     }
 
     if (questionIdCounter < questionArray.length-1){ //if we haven't finished going through all questions
-        questionIdCounter++; //add to id counter
         choicesEl.textContent = ""; //clear choices for next batch
         appearQuestion();
     }
 
-    else { //otherwise game has ended
-        quizEnding();
-    }
 }
 
-//when user first opens quiz
+//when user first opens quiz and click "start" timer will start
 var quizOpening = function(){
+    timerEl.innerHTML = "";
     quizStart.textContent = "Would You Like To Start My Quiz?";
 
     var startBtn = document.createElement("button");
     startBtn.textContent = "Sure why not";
     quizStart.appendChild(startBtn);
 
+    //when start button is clicked
     startBtn.addEventListener("click", function(){
-        var timeLeft = 60;
+        timeLeft = 60;
 
+        //timer will start
         var quizTimer = setInterval(function function1(){
-            timerEl.innerHTML = timeLeft + " " + "seconds remaining";
+            timerEl.innerHTML = "Timer: " + timeLeft;
             timeLeft-=1;
-            if(timeLeft <=0){
-                clearInterval(quizTImer);
-                timerEl.innerHTML = "Time is up"
-            }
+
+            if(timeLeft <=0 || questionIdCounter == questionArray.length-1){
+                clearInterval(quizTimer);
+                timerEl.innerHTML = "Game Over!";
+                quizEnding();
+            };
+
+           
         }, 1000);
+
+        appearQuestion();
     });
 
 }
@@ -150,7 +159,7 @@ var quizEnding = function(){
     quizStart.appendChild(startBtn);
     questionIdCounter = 0;
     score= 0;
-    startBtn.addEventListener("click", begin);
+    startBtn.addEventListener("click", quizOpening);
 };
 
 var saveScore = function(initial, scores){
