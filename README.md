@@ -10,7 +10,7 @@ A website that generates quiz scores
 
 ## Website
 https://anukazan.github.io/code-quiz/
-![Website screenshot](https://anukazan.github.io/code-quiz/screenshot.png?raw=true)
+![Website screenshot](https://anukazan.github.io/code-quiz/screenshot?raw=true)
 
 ## Contribution
 Made with ❤️ by Anuka
