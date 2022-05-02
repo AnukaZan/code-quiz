@@ -5,26 +5,80 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Anuka's Quiz </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <header>
-        <h5 class="h5">  </h5>
-        <div id="timer-section" class="timer-class">
-            <h5>  </h5>
-            <p id="timer"></p>
+
+    <!-- header with timer and high score-->
+    <header class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-7 text-left">
+                <a href="#" id = "highScore"> View High Score! </a>
+            </div>
+
+            <div id="timer-section" class="col-1 text-right timer-class">
+                <h5>  </h5>
+                <p id="timer"></p>
+            </div>
+
         </div>
     </header>
-    <main>
-        <div id="quiz-start"></div>
-        <section>
-            <h2 class="question" id = "question-id"></h2>
-            <ul class="choices" id = "choices-id"></ul>
-        </section>
-        <div>
-            <h3 id = "answer-id" class="answers"></h3>
+
+    <main class="row mt-5">
+        <div class="col-2"></div>
+        <div class="col-8 align-items-center">
+            <!--- Actual Quiz Area-->
+            <div id = "quizArea">
+                <!-- Quiz Start-->
+                <div id="quiz-start">
+                    <h2> Would You Like To Start My Quiz?</h2>
+                    <button id="startBtn"> Sure Why Not </button>
+                </div>
+
+                <!-- Actual Quiz Section-->
+                <section>
+                    <h2 class="question" id = "question-id"></h2>
+                    <ul class="choices btn" id = "choices-id"></ul> <!-- these will be appended in JS-->
+                </section>
+
+                <!-- If right or wrong-->
+                <div>
+                    <h3 id = "answer-id" class="answers"></h3>
+                </div>
+
+                <!-- Quiz End-->
+                <div class="justify-content-center d-none" id="quizEnding">
+                    <div class="text-left">
+                        <h2> Your Final Score: <span id="scoreText"></span> </h2>
+                    </div>
+                    <form>
+                        <input id=inputInitials type="text" title="Enter Your Initials">
+                        <button class="btn" id="saveScoreBtn"> Submit </button>
+                    </form>
+                    
+                </div>
+            </div>
+           
+
+            <!-- Once game over, show scores-->
+            <div id="showHighScores" class="justify-content-center d-none">
+                <h2> High Scores </h2>
+                <ul id="listofHS"></ul> <!--these will be appended in JS-->   
+                
+                <div>
+                    <button type="submit" class="btn" id="backToQuiz"> Back To Quiz </button>
+                    <button type="submit" class="btn" id="clearScore"> Clear All High Scores</button>
+                </div>
+            </div>
         </div>
+        <div class="col-2"></div>
     </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-ui-touch-punch@0.2.3/jquery.ui.touch-punch.min.js"></script>
     <script src = "./script.js"></script>
 </body>
 </html>
