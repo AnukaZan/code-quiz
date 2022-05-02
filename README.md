@@ -15,4 +15,4 @@ https://anukazan.github.io/code-quiz/
 ## Contribution
 Made with ❤️ by Anuka
 
-### ©️2022 Password Generator
+### ©️2022 Code Quiz
