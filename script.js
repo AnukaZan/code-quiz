@@ -53,19 +53,20 @@ var scoreText = document.querySelector("#scoreText");
 var quizEndingEl = document.querySelector("#quizEnding");
 var saveScoreBtn = document.querySelector("#saveScoreBtn");
 
-var scoreArray = [];
+var quizTimer;
+
+var scoreArray;
+
+if (localStorage.getItem("scores")){
+    scoreArray = JSON.parse(localStorage.getItem("scores"));
+} else {
+   scoreArray = [];
+};
 
 var timerEl = document.querySelector("#timer");
 var timeLeft = 60;
 var score =0;
 
-
-//restart timer and then show questions
-var begin = function(){
-    questionIdCounter = 0;
-    timeLeft = 60;
-    appearQuestion();
-}
 
 //Question and choice will appear one by one after choosing an option
 var appearQuestion = function(){
@@ -76,7 +77,7 @@ var appearQuestion = function(){
 
     //choices will be according to index number
     var choices = questionArray[questionIdCounter].c;
-
+    choicesEl.innerHTML = "";
     //create element for each choice and do action once a choice is clicked
     for (var i = 0; i < choices.length; i++){
         var choiceBtn = document.createElement("ol"); //make unordered list for every choice
@@ -85,10 +86,6 @@ var appearQuestion = function(){
         choicesEl.append(choiceBtn); //add choices in element
         choiceBtn.addEventListener("click", userChoice); //add event listener to choice click
     }
-
-    // if (questionIdCounter >= questionArray.length-1){
-    //     quizEnding();
-    // }
 
 }
 
@@ -118,28 +115,33 @@ var userChoice = function(event) {
     } 
     // If we have, game ends
     else {
+        clearInterval(quizTimer);
         quizEnding();
     }
     console.log(questionIdCounter);
 }
 
+
+
 //when user first opens quiz and click "start" timer will start
 var quizOpening = function(){
     timerEl.innerHTML = "";
-    $(quizStart).addClass("block");
-    startBtn = document.getElementById("#startBtn");
+    quizStart.setAttribute("style", "display:block !important");
+    quizEndingEl.setAttribute("style", "display:none");
+    choicesEl.innerHTML = "";
+
     questionIdCounter = 0;
     score= 0;
 
     //when start button is clicked
-    $("button").on("click", function(){
+    $("#startBtn").on("click", function(){
         timeLeft = 60;
         console.log("clicked");
         //timer will start
-        var quizTimer = setInterval(function(){
+        quizTimer = setInterval(function(){
             timeLeft--;
             timerEl.innerHTML = "Timer: " + timeLeft;
-            if(timeLeft <=0 || questionIdCounter >= questionArray.length-1){
+            if(timeLeft <=0 ){
                 clearInterval(quizTimer);
                 timerEl.innerHTML = "Game Over!";
                 quizEnding();
@@ -168,33 +170,26 @@ var quizEnding = function(){
     scoreText.textContent = score;
 };
 
-var inputInitial = document.getElementById("inputInitials")
+var inputInitial = document.getElementById("inputInitials");
 
 //input score area
 var inputScore = function(event){
    event.preventDefault();
+
    //make quiz area empty
    quizArea.style.display = "none";
+
    //show high score area
    showHighScores.style.display = "block";
-   
-   var savedScores = localStorage.getItem("scores");
-   
-   //if local storage empty, keep it empty. If not, parse the saved scores
-   if(savedScores === null){
-       scoreArray = [];
-   } else {
-       scoreArray = JSON.parse(savedScores)
-   }
 
    //save current score as array item
    var currentScore = {
-       initials: inputInitial.ariaValueMax,
-       score: score.textContent
+       initials: inputInitial.value,
+       score: scoreText.textContent
    };
-
+   console.log(scoreText.textContent);
    //push current score to array
-   scoreArray = scoreArray.push(currentScore);
+   scoreArray.push(currentScore);
 
    //make array string to store
    var str= JSON.stringify(scoreArray);
@@ -203,24 +198,16 @@ var inputScore = function(event){
    displayScore();
 }
 
-var listofHS = document.getElementById("#listofHS");
+var listofHS = document.getElementById("listofHS");
 
 var displayScore = function(){
-   //make quiz area empty
-   quizArea.style.display = "none";
-   //show high score area
-   showHighScores.style.display = "block";
-   var savedScores = localStorage.getItem("scores");
+   showHighScores.setAttribute("style", "display:block !important");
+  
+   var scoreHistory = JSON.parse(localStorage.getItem("scores"));
 
-   if (savedScores === null){
-       return;
-   }
-
-   var scoreHistory = JSON.parse(savedScores);
-
-   for (var i = 0; i<savedScores.length; i++){
+   for (var i = 0; i<scoreHistory.length; i++){
        var eachScore = document.createElement("li");
-       eachScore.innerHTML = scoreHistory[i].initials + "has a score of " + scoreHistory[i].score;
+       eachScore.innerHTML = scoreHistory[i].initials + " has a score of " + scoreHistory[i].score;
         listofHS.appendChild(eachScore);
    }
 
@@ -232,9 +219,24 @@ quizOpening();
 
 saveScoreBtn.addEventListener("click", function(event){
     inputScore(event);
+    inputInitial.value = "";
 });
 
 backBtn.addEventListener("click", function(){
     quizOpening();
+    $("quiz-start").attr("style", "display:block !important");
+    showHighScores.setAttribute("style", "display:none !important");
+    quizArea.setAttribute("style", "display:block !important");
 })
 
+clearBtn.addEventListener("click", function(){
+    scoreArray = [];
+    JSON.stringify(localStorage.setItem("scores", ""));
+    listofHS.innerHTML = "";
+});
+
+
+// showHighScores.addEventListener("click", function(){
+//     displayScore();
+//     showHighScores.setAttribute("style", "display:block !important");
+// });
